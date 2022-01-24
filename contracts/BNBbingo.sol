@@ -209,7 +209,8 @@ contract BNBbingo is CoOperateRole, CallerRole, ReentrancyGuard {
         tickets[currentTicketId] = Ticket({
             claimed: false,
             ticketNumber: numbers,
-            lotteryId: currentLotteryId
+            lotteryId: currentLotteryId,
+            buyer: msg.sender
         });
 
         if (lotteries[currentLotteryId].firstTicketId == 0) {
@@ -336,6 +337,8 @@ contract BNBbingo is CoOperateRole, CallerRole, ReentrancyGuard {
                     .div(100);
             }
         }
+
+        lotteries[currentLotteryId].status = LotteryStatus.CLAIMABLE;
     }
 
     /**
@@ -343,6 +346,7 @@ contract BNBbingo is CoOperateRole, CallerRole, ReentrancyGuard {
      * @param ticketId the ticket id
      */
     function claimTicket(uint256 ticketId) public {
+        require(tickets[ticketId].buyer == msg.sender, "Not ticket owner");
         uint256 prize = getPrize(ticketId);
         require(prize != 0, "The ticket with no prize");
         payable(msg.sender).transfer(prize);
