@@ -58,6 +58,16 @@ describe('BNBbingo Lottery', function () {
 
         await this.bnbBingo.connect(addr3).claimTicket(1);
       });
+
+      it('2.1.3. Claim ticket again should be failed', async function () {
+        const [owner, addr1, addr2, addr3] = await ethers.getSigners();
+        expect(await this.bnbBingo.getPrize(1)).to.equal('400000000000000000');
+
+        await this.bnbBingo.connect(addr3).claimTicket(1);
+
+        await expect(this.bnbBingo.connect(addr3).claimTicket(1))
+      .to.be.revertedWith('The ticket was already claimed');
+      });
     });
   });
 });
