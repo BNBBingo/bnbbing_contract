@@ -347,8 +347,10 @@ contract BNBbingo is CoOperateRole, CallerRole, ReentrancyGuard {
      */
     function claimTicket(uint256 ticketId) public {
         require(tickets[ticketId].buyer == msg.sender, "Not ticket owner");
+        require(!tickets[ticketId].claimed, "The ticket was already claimed");
         uint256 prize = getPrize(ticketId);
         require(prize != 0, "The ticket with no prize");
+        tickets[ticketId].claimed = true;
         payable(msg.sender).transfer(prize);
     }
 
