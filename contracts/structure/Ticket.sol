@@ -5,4 +5,5 @@ struct Ticket {
     bool claimed;
     uint8[6] ticketNumber;
     uint256 lotteryId;
+    address buyer;
 }
