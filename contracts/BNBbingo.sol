@@ -66,6 +66,18 @@ contract BNBbingo is CoOperateRole, CallerRole, ReentrancyGuard {
      * @param round round id
      */
     event RoundStarted(uint256 indexed round);
+
+    /**
+     * @dev Event of Claiming round
+     * @param round round id
+     */
+    event RoundClaimed(uint256 indexed round);
+
+    /**
+     * @dev Event of Claiming ticket
+     * @param ticketId ticket id
+     */
+    event ClaimTicket(uint256 indexed ticketId);
     
     constructor(
         address aAddress,
@@ -347,6 +359,8 @@ contract BNBbingo is CoOperateRole, CallerRole, ReentrancyGuard {
         }
 
         lotteries[currentLotteryId].status = LotteryStatus.CLAIMABLE;
+
+        emit RoundClaimed(currentLotteryId);
     }
 
     /**
@@ -360,6 +374,8 @@ contract BNBbingo is CoOperateRole, CallerRole, ReentrancyGuard {
         require(prize != 0, "The ticket with no prize");
         tickets[ticketId].claimed = true;
         payable(msg.sender).transfer(prize);
+
+        emit ClaimTicket(ticketId);
     }
 
     /**
