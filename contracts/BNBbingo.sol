@@ -59,7 +59,13 @@ contract BNBbingo is CoOperateRole, CallerRole, ReentrancyGuard {
      * @param buyer ticket buyer
      * @param ticketId ticket id
      */
-    event BuyTicket(address indexed buyer, uint256 indexed ticketId);
+    event BuyTicket(address indexed buyer, uint256 indexed ticketId, uint8[6] indexed ticketNums);
+
+    /**
+     * @dev Event of starting round
+     * @param round round id
+     */
+    event RoundStarted(uint256 indexed round);
     
     constructor(
         address aAddress,
@@ -135,6 +141,8 @@ contract BNBbingo is CoOperateRole, CallerRole, ReentrancyGuard {
                 prizeDivision[5],
                 systemDivision
             ];
+        
+        emit RoundStarted(currentLotteryId);
     }
 
     function buyTicket(uint8[6] memory numbers) 
@@ -221,7 +229,7 @@ contract BNBbingo is CoOperateRole, CallerRole, ReentrancyGuard {
 
         currentPrize += ticketPrice;
 
-        emit BuyTicket(msg.sender, currentTicketId);
+        emit BuyTicket(msg.sender, currentTicketId, numbers);
     }
 
     /**
@@ -396,5 +404,31 @@ contract BNBbingo is CoOperateRole, CallerRole, ReentrancyGuard {
             .div(100).div(lottery.winningCnt[winningCnt]);
 
         return prize;
+    }
+
+    /**
+     * @dev Return winning number of lottery round
+     * @param roundId Round ID
+     */
+    function getLotteryFinalNumber(uint256 roundId) public view returns(uint8[6] memory) {
+        return lotteries[roundId].finalNumber;
+    }
+
+    /**
+     * @dev Return winning cnt of lottery
+     * @param roundId Round ID
+     * @param equalNumbers index of lottery winning Cnt
+     */
+    function getLotteryWinningCnt(uint256 roundId, uint8 equalNumbers)
+    public view returns(uint256) {
+        return lotteries[roundId].winningCnt[equalNumbers];
+    }
+
+    /**
+     * @dev Return price division of lottery round
+     * @param roundId Round ID
+     */
+    function getLotteryPrizeDivision(uint256 roundId) public view returns(uint256[7] memory) {
+        return lotteries[roundId].prizeDivision;
     }
 }

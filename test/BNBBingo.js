@@ -13,7 +13,7 @@ describe('BNBbingo Lottery', function () {
     this.bnbBingo = await BNBbingo.deploy(
       addr1.address,
       addr2.address,
-      '1000000000000000000',
+      '50000000000000000',
       this.randomGenerator.address
     );
     await this.bnbBingo.deployed();
